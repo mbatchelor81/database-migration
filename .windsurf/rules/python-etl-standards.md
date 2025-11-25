@@ -7,6 +7,13 @@ description: Guidelines for writing Python code for the PostgreSQL to MongoDB mi
 
 ---
 
+## Project Virtual Environment
+Always use the .venv python environment for this project
+
+```
+source .venv/bin/activate
+```
+
 ## Project Structure
 
 ```
