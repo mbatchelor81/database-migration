@@ -160,10 +160,12 @@ Follow the guidelines in docs/mongodb_best_practices.md. Explain your decisions 
 **Say to Agent:**
 ```
 Create a Python script at sink/collections_schema.py that:
-1. Defines the MongoDB collections based on the schema you designed
-2. Creates appropriate indexes for our query patterns
-3. Includes schema validation rules (optional but nice to have)
-4. Has a function to initialize the collections and indexes
+1. Takes command line arguments init, drop, and inspect
+2. Defines the MongoDB collections based on the schema you designed
+3. Creates appropriate indexes for our query patterns
+4. Includes schema validation rules
+5. Has a function to initialize the collections and indexes
+6. Function to drop database and collections 
 
 Include detailed comments explaining each index and why it's needed.
 ```

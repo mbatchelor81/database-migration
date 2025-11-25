@@ -1,6 +1,6 @@
 ---
 trigger: model_decision
-description: Guidelines for writing Python code for the PostgreSQL to MongoDB migration.
+description: Guidelines for writing and running Python scripts for this project
 ---
 
 # Python ETL Rules and Standards
@@ -8,7 +8,7 @@ description: Guidelines for writing Python code for the PostgreSQL to MongoDB mi
 ---
 
 ## Project Virtual Environment
-Always use the .venv python environment for this project
+**IMPORTANT: Always use the .venv python environment for this project**
 
 ```
 source .venv/bin/activate
