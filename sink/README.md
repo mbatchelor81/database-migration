@@ -111,12 +111,86 @@ db.tasks.drop()
 - Nested objects and arrays are native
 - Better for hierarchical and semi-structured data
 
+## Schema Management
+
+### collections_schema.py
+
+Python script to manage MongoDB collections, indexes, and validation rules.
+
+**Commands:**
+
+```bash
+# Initialize collections and indexes
+python collections_schema.py init
+
+# Inspect current schema
+python collections_schema.py inspect
+
+# Drop all collections (requires confirmation)
+python collections_schema.py drop
+```
+
+### Collections Created
+
+1. **organizations** - Top-level container for projects and labels
+   - 1 index on `name`
+   - Validation enabled
+
+2. **users** - User profiles with embedded organization memberships
+   - 3 indexes: `email` (unique), `name`, `organizations.org_id`
+   - Validation enabled
+
+3. **labels** - Master label definitions scoped to organizations
+   - 2 indexes: `org_id + name` (unique), `org_id`
+   - Validation enabled
+
+4. **projects** - Projects with embedded tasks, assignees, labels, comments
+   - 12 indexes for optimal query performance
+   - Validation enabled with array size limits
+
+### Index Strategy
+
+**Project-level indexes:**
+- `org_id + status` - Find projects by organization and status
+- `org_id + created_at` - List projects sorted by creation date
+
+**Task-level indexes (on embedded arrays):**
+- `tasks.assignees.user_id` - **CRITICAL**: Find user's assigned tasks
+- `tasks.status` - Filter tasks by status
+- `tasks.priority` - Sort/filter by priority
+- `tasks.due_date` - Sort by due date
+- `tasks.labels.label_id` - Find tasks by label
+- `tasks.labels.name` - Search tasks by label name
+
+**Compound indexes (for common queries):**
+- `org_id + tasks.status + tasks.priority` - Org tasks by status and priority
+- `tasks.assignees.user_id + tasks.status` - User's tasks by status
+- `tasks.assignees.user_id + tasks.due_date` - User's tasks by due date
+- `tasks.status + tasks.priority + tasks.due_date` - Complex filtering
+
+### Schema Validation
+
+All collections have JSON schema validation enabled:
+- Required fields enforced
+- Data types validated
+- Array size limits (prevent document bloat)
+- Enum constraints on status/priority fields
+- Email pattern validation
+
+### Document Size Limits
+
+- **Projects**: Max 500 tasks per project (~1MB)
+- **Tasks**: Max 20 assignees, 20 labels, 100 comments per task
+- **Users**: Max 100 organization memberships
+
+These limits ensure documents stay well under MongoDB's 16MB limit.
+
 ## Next Steps
 
 During the demo, you will:
-1. Design the MongoDB document schema based on the relational model
-2. Decide what to embed vs. reference
-3. Create appropriate indexes for query performance
+1. ✅ Design the MongoDB document schema based on the relational model
+2. ✅ Decide what to embed vs. reference
+3. ✅ Create appropriate indexes for query performance
 4. Implement the ETL pipeline to migrate data
 
 ## Stopping MongoDB

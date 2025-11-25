@@ -1,0 +1,449 @@
+{
+  "collections": {
+    "organizations": {
+      "description": "Top-level container for projects and labels",
+      "example": {
+        "_id": {"$oid": "507f1f77bcf86cd799439011"},
+        "name": "Acme Corporation",
+        "created_at": {"$date": "2024-01-15T10:00:00.000Z"},
+        "member_count": 15,
+        "project_count": 8,
+        "settings": {
+          "timezone": "America/New_York",
+          "default_task_status": "todo"
+        }
+      },
+      "indexes": [
+        {"name": 1}
+      ]
+    },
+
+    "users": {
+      "description": "User profiles with embedded organization memberships",
+      "example": {
+        "_id": {"$oid": "507f191e810c19729de860ea"},
+        "email": "alice@acme.com",
+        "name": "Alice Johnson",
+        "created_at": {"$date": "2024-01-16T08:00:00.000Z"},
+        "organizations": [
+          {
+            "org_id": {"$oid": "507f1f77bcf86cd799439011"},
+            "org_name": "Acme Corporation",
+            "role": "admin",
+            "joined_at": {"$date": "2024-01-16T08:00:00.000Z"}
+          },
+          {
+            "org_id": {"$oid": "507f1f77bcf86cd799439012"},
+            "org_name": "TechStart Inc",
+            "role": "member",
+            "joined_at": {"$date": "2024-03-01T10:00:00.000Z"}
+          }
+        ],
+        "stats": {
+          "assigned_tasks": 12,
+          "completed_tasks": 8,
+          "comments_made": 45
+        }
+      },
+      "indexes": [
+        {"email": 1, "unique": true},
+        {"organizations.org_id": 1},
+        {"name": 1}
+      ]
+    },
+
+    "labels": {
+      "description": "Master label definitions scoped to organizations",
+      "example": {
+        "_id": {"$oid": "507f1f77bcf86cd799439013"},
+        "org_id": {"$oid": "507f1f77bcf86cd799439011"},
+        "name": "Feature",
+        "color": "#00FF00",
+        "created_at": {"$date": "2024-01-15T10:30:00.000Z"},
+        "usage_count": 45
+      },
+      "indexes": [
+        {"org_id": 1, "name": 1, "unique": true},
+        {"org_id": 1}
+      ]
+    },
+
+    "projects": {
+      "description": "Projects with embedded tasks, assignees, labels, and comments",
+      "example": {
+        "_id": {"$oid": "507f1f77bcf86cd799439014"},
+        "org_id": {"$oid": "507f1f77bcf86cd799439011"},
+        "org_name": "Acme Corporation",
+        "name": "Website Redesign",
+        "description": "Complete redesign of company website",
+        "status": "active",
+        "created_at": {"$date": "2024-01-15T11:00:00.000Z"},
+        "tasks": [
+          {
+            "_id": {"$oid": "507f1f77bcf86cd799439015"},
+            "title": "Design homepage mockup",
+            "description": "Create initial design mockups for the new homepage",
+            "status": "completed",
+            "priority": "high",
+            "due_date": {"$date": "2024-01-25T17:00:00.000Z"},
+            "created_at": {"$date": "2024-01-20T09:00:00.000Z"},
+            "updated_at": {"$date": "2024-01-21T15:30:00.000Z"},
+            "assignees": [
+              {
+                "user_id": {"$oid": "507f191e810c19729de860ea"},
+                "name": "Alice Johnson",
+                "email": "alice@acme.com",
+                "assigned_at": {"$date": "2024-01-20T10:30:00.000Z"}
+              },
+              {
+                "user_id": {"$oid": "507f191e810c19729de860eb"},
+                "name": "Carol Williams",
+                "email": "carol@acme.com",
+                "assigned_at": {"$date": "2024-01-20T11:00:00.000Z"}
+              }
+            ],
+            "labels": [
+              {
+                "label_id": {"$oid": "507f1f77bcf86cd799439013"},
+                "name": "Feature",
+                "color": "#00FF00"
+              },
+              {
+                "label_id": {"$oid": "507f1f77bcf86cd799439016"},
+                "name": "Enhancement",
+                "color": "#0000FF"
+              }
+            ],
+            "comments": [
+              {
+                "_id": {"$oid": "507f1f77bcf86cd799439017"},
+                "user_id": {"$oid": "507f191e810c19729de860ea"},
+                "author_name": "Alice Johnson",
+                "content": "Initial mockups look great! Let's proceed with this design.",
+                "created_at": {"$date": "2024-01-21T09:00:00.000Z"}
+              },
+              {
+                "_id": {"$oid": "507f1f77bcf86cd799439018"},
+                "user_id": {"$oid": "507f191e810c19729de860eb"},
+                "author_name": "Carol Williams",
+                "content": "Agreed, the color scheme is perfect for our brand.",
+                "created_at": {"$date": "2024-01-21T10:30:00.000Z"}
+              }
+            ],
+            "comment_count": 2,
+            "assignee_count": 2
+          },
+          {
+            "_id": {"$oid": "507f1f77bcf86cd799439019"},
+            "title": "Implement responsive navigation",
+            "description": "Build mobile-friendly navigation menu",
+            "status": "in_progress",
+            "priority": "high",
+            "due_date": {"$date": "2024-01-28T17:00:00.000Z"},
+            "created_at": {"$date": "2024-01-20T10:00:00.000Z"},
+            "updated_at": {"$date": "2024-01-22T14:20:00.000Z"},
+            "assignees": [
+              {
+                "user_id": {"$oid": "507f191e810c19729de860ec"},
+                "name": "Bob Smith",
+                "email": "bob@acme.com",
+                "assigned_at": {"$date": "2024-01-20T10:30:00.000Z"}
+              }
+            ],
+            "labels": [
+              {
+                "label_id": {"$oid": "507f1f77bcf86cd799439013"},
+                "name": "Feature",
+                "color": "#00FF00"
+              },
+              {
+                "label_id": {"$oid": "507f1f77bcf86cd799439020"},
+                "name": "Frontend",
+                "color": "#FF00FF"
+              }
+            ],
+            "comments": [
+              {
+                "_id": {"$oid": "507f1f77bcf86cd799439021"},
+                "user_id": {"$oid": "507f191e810c19729de860ec"},
+                "author_name": "Bob Smith",
+                "content": "Working on the mobile breakpoints now",
+                "created_at": {"$date": "2024-01-22T14:20:00.000Z"}
+              }
+            ],
+            "comment_count": 1,
+            "assignee_count": 1
+          }
+        ],
+        "stats": {
+          "total_tasks": 12,
+          "completed_tasks": 5,
+          "in_progress_tasks": 4,
+          "todo_tasks": 3,
+          "total_comments": 28
+        }
+      },
+      "indexes": [
+        {"org_id": 1, "status": 1},
+        {"org_id": 1, "created_at": -1},
+        {"tasks.status": 1},
+        {"tasks.priority": 1},
+        {"tasks.due_date": 1},
+        {"tasks.assignees.user_id": 1},
+        {"tasks.labels.label_id": 1},
+        {"org_id": 1, "tasks.status": 1, "tasks.priority": 1},
+        {"tasks.assignees.user_id": 1, "tasks.status": 1}
+      ]
+    }
+  },
+
+  "query_examples": {
+    "get_project_with_tasks": {
+      "description": "Fetch a complete project with all tasks (single query, no JOINs)",
+      "query": {
+        "_id": {"$oid": "507f1f77bcf86cd799439014"}
+      },
+      "projection": {
+        "name": 1,
+        "status": 1,
+        "tasks": 1,
+        "stats": 1
+      }
+    },
+
+    "find_tasks_by_status": {
+      "description": "Find all in-progress tasks across projects in an organization",
+      "pipeline": [
+        {"$match": {"org_id": {"$oid": "507f1f77bcf86cd799439011"}}},
+        {"$unwind": "$tasks"},
+        {"$match": {"tasks.status": "in_progress"}},
+        {"$project": {
+          "project_name": "$name",
+          "task": "$tasks"
+        }},
+        {"$sort": {"task.priority": -1, "task.due_date": 1}},
+        {"$limit": 50}
+      ]
+    },
+
+    "get_user_assigned_tasks": {
+      "description": "Get all tasks assigned to a specific user",
+      "pipeline": [
+        {"$unwind": "$tasks"},
+        {"$match": {"tasks.assignees.user_id": {"$oid": "507f191e810c19729de860ea"}}},
+        {"$project": {
+          "project_name": "$name",
+          "task": "$tasks"
+        }},
+        {"$sort": {"task.due_date": 1}}
+      ]
+    },
+
+    "search_tasks_by_labels": {
+      "description": "Find tasks with specific labels",
+      "pipeline": [
+        {"$unwind": "$tasks"},
+        {"$match": {"tasks.labels.name": {"$in": ["Feature", "Bug"]}}},
+        {"$project": {
+          "project_name": "$name",
+          "task": "$tasks"
+        }}
+      ]
+    },
+
+    "get_user_organizations": {
+      "description": "Get all organizations a user belongs to (single query, no JOIN)",
+      "query": {
+        "_id": {"$oid": "507f191e810c19729de860ea"}
+      },
+      "projection": {
+        "organizations": 1
+      }
+    },
+
+    "add_comment_to_task": {
+      "description": "Add a new comment to a specific task",
+      "filter": {
+        "_id": {"$oid": "507f1f77bcf86cd799439014"},
+        "tasks._id": {"$oid": "507f1f77bcf86cd799439015"}
+      },
+      "update": {
+        "$push": {
+          "tasks.$.comments": {
+            "_id": {"$oid": "new_comment_id"},
+            "user_id": {"$oid": "507f191e810c19729de860ea"},
+            "author_name": "Alice Johnson",
+            "content": "Updated the design based on feedback",
+            "created_at": {"$date": "2024-01-22T16:00:00.000Z"}
+          }
+        },
+        "$inc": {"tasks.$.comment_count": 1},
+        "$set": {"tasks.$.updated_at": {"$date": "2024-01-22T16:00:00.000Z"}}
+      }
+    },
+
+    "update_task_status": {
+      "description": "Update a task's status",
+      "filter": {
+        "_id": {"$oid": "507f1f77bcf86cd799439014"},
+        "tasks._id": {"$oid": "507f1f77bcf86cd799439015"}
+      },
+      "update": {
+        "$set": {
+          "tasks.$.status": "completed",
+          "tasks.$.updated_at": {"$date": "2024-01-22T16:00:00.000Z"}
+        },
+        "$inc": {
+          "stats.completed_tasks": 1,
+          "stats.in_progress_tasks": -1
+        }
+      }
+    },
+
+    "assign_user_to_task": {
+      "description": "Add a user as an assignee to a task",
+      "filter": {
+        "_id": {"$oid": "507f1f77bcf86cd799439014"},
+        "tasks._id": {"$oid": "507f1f77bcf86cd799439015"}
+      },
+      "update": {
+        "$push": {
+          "tasks.$.assignees": {
+            "user_id": {"$oid": "507f191e810c19729de860ed"},
+            "name": "David Brown",
+            "email": "david@techstart.com",
+            "assigned_at": {"$date": "2024-01-22T16:00:00.000Z"}
+          }
+        },
+        "$inc": {"tasks.$.assignee_count": 1}
+      }
+    }
+  },
+
+  "migration_mapping": {
+    "description": "How PostgreSQL tables map to MongoDB collections",
+    "mappings": [
+      {
+        "postgres_table": "organizations",
+        "mongodb_collection": "organizations",
+        "strategy": "Direct 1:1 mapping",
+        "notes": "Add denormalized counts"
+      },
+      {
+        "postgres_table": "users",
+        "mongodb_collection": "users",
+        "strategy": "Direct mapping with embedded org_members",
+        "notes": "Embed org_members junction table as organizations[] array"
+      },
+      {
+        "postgres_table": "org_members",
+        "mongodb_collection": "users.organizations[]",
+        "strategy": "Embed in users collection",
+        "notes": "Junction table becomes embedded array"
+      },
+      {
+        "postgres_table": "projects",
+        "mongodb_collection": "projects",
+        "strategy": "Direct mapping with embedded tasks",
+        "notes": "Embed all tasks from tasks table"
+      },
+      {
+        "postgres_table": "tasks",
+        "mongodb_collection": "projects.tasks[]",
+        "strategy": "Embed in projects collection",
+        "notes": "Embed assignees, labels, comments as sub-arrays"
+      },
+      {
+        "postgres_table": "task_assignees",
+        "mongodb_collection": "projects.tasks[].assignees[]",
+        "strategy": "Embed in tasks array",
+        "notes": "Junction table becomes embedded array with denormalized user data"
+      },
+      {
+        "postgres_table": "task_labels",
+        "mongodb_collection": "projects.tasks[].labels[]",
+        "strategy": "Embed in tasks array",
+        "notes": "Junction table becomes embedded array with denormalized label data"
+      },
+      {
+        "postgres_table": "labels",
+        "mongodb_collection": "labels",
+        "strategy": "Separate collection (master list)",
+        "notes": "Keep separate for central management, denormalize into tasks"
+      },
+      {
+        "postgres_table": "comments",
+        "mongodb_collection": "projects.tasks[].comments[]",
+        "strategy": "Embed in tasks array",
+        "notes": "Embed with denormalized author name"
+      }
+    ]
+  },
+
+  "denormalization_strategy": {
+    "description": "Fields that are denormalized and their update strategies",
+    "denormalized_fields": [
+      {
+        "field": "org_name in projects",
+        "source": "organizations.name",
+        "frequency": "Rare (org renames)",
+        "update_pattern": "Batch update all projects when org name changes"
+      },
+      {
+        "field": "org_name in users.organizations[]",
+        "source": "organizations.name",
+        "frequency": "Rare (org renames)",
+        "update_pattern": "Batch update all users when org name changes"
+      },
+      {
+        "field": "name, email in tasks.assignees[]",
+        "source": "users.name, users.email",
+        "frequency": "Occasional (profile updates)",
+        "update_pattern": "Batch update all projects with arrayFilters when user changes"
+      },
+      {
+        "field": "author_name in tasks.comments[]",
+        "source": "users.name",
+        "frequency": "Occasional (profile updates)",
+        "update_pattern": "Batch update all projects with arrayFilters when user changes"
+      },
+      {
+        "field": "name, color in tasks.labels[]",
+        "source": "labels.name, labels.color",
+        "frequency": "Rare (label changes)",
+        "update_pattern": "Batch update all projects with arrayFilters when label changes"
+      }
+    ]
+  },
+
+  "validation_schema": {
+    "description": "MongoDB schema validation rules for projects collection",
+    "validator": {
+      "$jsonSchema": {
+        "bsonType": "object",
+        "required": ["org_id", "name", "status", "tasks"],
+        "properties": {
+          "org_id": {"bsonType": "objectId"},
+          "name": {"bsonType": "string", "maxLength": 255},
+          "status": {"enum": ["active", "planning", "completed", "archived"]},
+          "tasks": {
+            "bsonType": "array",
+            "maxItems": 500,
+            "items": {
+              "bsonType": "object",
+              "required": ["title", "status", "priority"],
+              "properties": {
+                "title": {"bsonType": "string", "maxLength": 255},
+                "status": {"enum": ["todo", "in_progress", "completed", "blocked"]},
+                "priority": {"enum": ["low", "medium", "high", "critical"]},
+                "assignees": {"bsonType": "array", "maxItems": 20},
+                "labels": {"bsonType": "array", "maxItems": 20},
+                "comments": {"bsonType": "array", "maxItems": 100}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
